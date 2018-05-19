@@ -1,0 +1,5 @@
+lxml
+gunicorn
+Flask
+requests
+

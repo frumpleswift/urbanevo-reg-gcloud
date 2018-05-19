@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Urban Evo registration</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="static/css/signature-pad.css">
+
+<script>
+function isDate(dateStr) { 
+    var month = dateStr.slice(0,2); 
+    var day = dateStr.slice(3,5); 
+    var year = dateStr.slice(6); 
+
+    if (month < 1 || month > 12) { 
+        alert("Month must be between 1 and 12."); 
+        return false; 
+    } 
+
+    if (day < 1 || day > 31) { 
+        alert("Day must be between 1 and 31."); 
+        return false; 
+    } 
+
+    if ((month==4 || month==6 || month==9 || month==11) && day==31) { 
+        alert("Month "+month+" doesn't have 31 days!") 
+        return false; 
+    } 
+
+    if (month == 2) { 
+        var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)); 
+        if (day > 29 || (day==29 && !isleap)) { 
+            alert("February " + year + " doesn't have " + day + " days!"); 
+            return false; 
+        } 
+    } 
+    return true; 
+} 
+
+function resetForm() {
+$("input[type=text], textarea").val("");
+        $("input[type=password], textarea").val("");
+	$("input[type=tel], textarea").val("");
+	$(".containerChild").each(function(){ $(this).remove();});
+}
+</script>
+
+
+<style>
+.header {
+	background-color:hsl(0,100%,15%);
+	}
+body {background-color:hsl(0, 100%, 15%);
+
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+	}
+h2 {color:white;}
+
+.completeText {
+   text-align: center;
+   font-family: Impact, Charcoal, sans-serif;
+   color: hsl(0,100%,15%);
+   font-size: 5em;
+   margin: 4px 0px;
+
+}
+
+.complete {
+    margin: auto;
+    max-width: 70%;
+    padding: 10px;
+}
+
+span {color:red;}
+input[type=text], input[type=tel], input[type=password], input[type=date]{
+	width: 98%;
+	padding: 12px 20px;
+	margin: 8px 4px;
+	display:block;
+	border: 1px solid #aaa;
+	border-radius: 5px;
+	box-sizing: border-box;
+	background-color: white;
+	}
+    
+input:focus{
+	border:1px solid #888;
+}
+    
+input[type=submit] {
+	width: 40%;
+	background-color:hsl(0, 100%, 35%);
+	color: white;
+	padding: 14px 20px;
+	margin: 4px 0;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 20px;
+}
+input[type=submit]:hover {
+	background-color: hsl(0, 100%, 65%);
+}
+
+
+.container {
+	border-radius: 5px;
+  	background-color: white;
+	padding: 20px;
+}  
+.containerChild {
+    border-radius: 5px;
+    background-color: white;
+    padding: 1px 20px 20px 20px;
+    border-top: 2px dotted black;
+    }
+    
+.footer {
+	border-radius: 5px;
+    background-color: white;
+    padding: 20px;
+    }
+
+.col {
+    float: left;
+    width: 48%;
+    margin-left:3px;
+   
+}
+.col2 {
+	float:left;
+    width:48%;
+    margin-left:15px;
+    }
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media (max-width: 600px) {
+    .col, .col2 {
+        width: 100%;
+        margin-top: 0;
+        margin-left: 5px;
+    }
+}
+
+button {
+    margin: 10px 10px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px 10px;
+}
+
+.button {
+    background-color: hsl(0, 100%, 35%); 
+    border: none;
+    border-radius:5px;
+    width:40%;
+    color: white;
+    padding: 15px 16px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+
+.button:hover {
+    background-color: hsl(0, 100%, 65%);
+    color: black;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<img src="static/img/logo.png">
+<h2>New Member Information</h2><span style="color:white;">Already have an account and need to add a child to your account? Login with your email and password <a href="https://wellnessliving.com/schedule/urbanevo">here</a></span>
+<p style="color:white;"><b><u>Adult</u></b> Member/ Parent / Guardian Info</p>
+</header>
+
+<form id="theForm">
+    <div class="container">
+    	<div class="row">
+        	<div class="col">
+    			<span>*</span>  
+	    		<label for="firstname">First Name:</label>
+	    		<input type="text" id="firstname" name="fname" required pattern = ".{2,}" placeholder="Your Name">
+     		</div>
+            
+            <div class="col2">
+				<span>*</span>
+	    		<label for="lastname">Last Name:</label>
+	    		<input type="text" id="lastname" name="lname" required pattern = ".{2,}" placeholder="Last Name">
+            </div>
+            
+        	<div class="col">
+        		<span>*</span>
+        		<label for="gend">Gender:</label>
+    			<select id="gend" name="gender">
+      				<option value=2>Female</option>
+      				<option value=1>Male</option>
+        		</select><br><br>
+           	</div>
+            
+            <div class="col2">
+            	<label for="gym">Gym Location:</label>
+    			<select id="gym" name="location">
+      				<option value=81269>Urban Evolution Alexandria</option>
+      				<option value=208833>Urban Evolution Sterling</option>
+      		
+        		</select><br><br>
+          	</div>
+            
+            <div class="col">
+        		<span>*</span>
+        		<label for="DOB">Date of Birth:</label>
+        		<input type="text" id="DOB" name="dateBirth" required pattern="[0-1]{1}[0-9]{1}/[0-3]{1}[0-9]{1}/[0-9]{4}" placeholder="MM/DD/YYYY">
+       		</div>
+            
+            <div class="col2">
+       			<span>*</span>
+    			<label for="email">email:</label>
+    			<input type="text" id="email" name="email" required pattern= ".{2,}[@].{2,}[.][A-Za-z]{2,4}" placeholder="email">
+        	</div>
+            
+            <div class="col">
+        		<span>*</span>
+        		<label for="mobile">Phone #:</label>
+	    		<input type="tel" id="mobile" name="phone" required
+           pattern="[0-9]{3}[- ]*[0-9]{3}[- ]*[0-9]{4}" placeholder="xxx-xxx-xxxx">
+           	</div>
+            <div class="col2">
+        		<label for="home">2nd Phone:</label>
+	    		<input type="tel" id="phone2" name="phoneHome"
+           pattern="[[0-9]{3}[- ]*[0-9]{3}[- ]*[0-9]{4}" placeholder="xxx-xxx-xxxx">
+           	</div>
+         
+         	<div class="col">
+        		<span>*</span>
+				<label for="addr">Address:</label>
+        		<input type="text" id="addr" name="address" required pattern=".{4,}" placeholder="address">
+        	</div>
+            
+            <div class="col2">
+        		<span>*</span>
+        		<label for="cty">City:</label>
+        		<input list="cities" type="text" id="cty" name="city" required placeholder="city">
+			<datalist id="cities">
+			</datalist>
+        	</div>
+            
+            <div class="col">
+        		<span>*</span>
+        		<label for="zipCode">Postal/Zip Code:</label>
+        		<input type="text" id="zipCode" name="postal" required pattern = "[0-9]{5}[- ]*[0-9]{0,4}" placeholder="postal or zip code"> 
+                </div>
+                
+         	<div class="col2">
+                <label for="referral">Referred By:</label>
+        		<input type="text" id="referral" name="referred" placeholder = "referred by">
+          	</div>
+    
+                
+       		<div class="col">
+        		<span>*</span>
+    			<label for="password">password:</label>
+    			<input type="password" id="password" name="pwd" required pattern=".{6,}" placeholder="password">
+				</div>
+                
+         	<div class="col2">
+        		<span>*</span>
+    			<label for="password2">re-enter password:</label>
+    			<input type="password" id="password2" name="pwd2" required placeholder = "re-type your password">
+        	</div>
+            
+		</div>
+	</div>
+    
+	<div id="members"></div>
+    <script>
+    	var members = 0;
+$(document).ready(function(){
+        $("#addMember").click(function() {
+        	members += 1;
+            	$("#members").append('<div class="containerChild" id="member'+members+'"><div class="row"><div class="col"><p><b>Additional Member:</b></p></div><div class="col2"><button id="removeMember'+members+'">Remove New Member</button></div><div class="col"><span>*</span><label for="firstname2">First Name:</label><input type="text" name="fname" required pattern = ".{2,}" placeholder="First Name"></div><div class="col2"><span>*</span><label for="lastname2">Last Name:</label><input type="text" name="lname" required pattern = ".{2,}" placeholder="Last Name"></div><div class="col"><span>*</span><label for="gend2">Gender:</label><select required name="gender"><option value=2>Female</option><option value=1>Male</option></select><br><br><span>*</span><label for="relationship">Relationship to Member:</label><select required name="relation"><option value=0>Child</option><option value=1>Spouse</option><option value=2>Friend</option><option value=3>Other</option></select><br></div><div class="col2"><span>*</span><label for="DOB">Date of Birth:</label><input type="text" id="DOB'+members+'" name="dateBirth" class="childDOB" required pattern="[0-1]{1}[0-9]{1}/[0-3]{1}[0-9]{1}/[0-9]{4}" placeholder="MM/DD/YYYY"><br></div></div></div>');
+
+
+		$("#removeMember"+members).click(function() {$(this).parents(".containerChild").remove(); });
+	});
+
+$("#resetForm").click(function() {
+	resetForm();
+});
+
+$("#DOB").blur(function() {
+ var birthStr = $("#DOB").val();
+   if (birthStr != "") 
+	{	
+   	if (isDate(birthStr) == true)
+	    {
+        	var d = new Date(birthStr);
+		var today = Date.now()
+        	if (today - d.getTime() < 568011600000) {
+			$("#DOB").focus();
+			alert("Member must be 18 years or older!");
+			$("#DOB").val("");
+			}
+	    }
+   	else {
+		$("#DOB").val("");
+		$("#DOB").focus(); }
+	}
+});
+
+
+$("#theForm").submit(function(event){
+	event.preventDefault();
+	$("#consentForm").css("display", "block"); 
+	//resizeCanvas(); 
+});
+
+$("#hideSignature").click(function(){$("#signatureForm").css("display", "none");});
+
+$("#cancelConsent").click(function(){$("#consentForm").css("display", "none");});
+
+$("#acceptWaiver").click(function(){ 
+	$("#consentForm").css("display", "none"); 
+	$("#signatureForm").css("display", "block");
+	resizeCanvas();
+});
+
+
+$("#email").blur(function() {
+
+	email=$("#email").val();
+
+	if (email != "") {
+
+		$.get("/emailCheck/"+email, function (data) {
+
+			if ((JSON.stringify(data).indexOf("s_message") >0 ) || (JSON.stringify(data).indexOf("already") >0 ) || (JSON.stringify(data).indexOf("error") >0 )){
+
+				alert("Email address already associated with an account!");
+				$("#email").val("").focus();
+					
+
+			}
+
+		});	
+
+	}
+
+});
+
+
+$("#cty").keyup(function() {
+
+	city=$("#cty").val();
+	if (city.length > 2) {
+
+		$.get("/city/"+city, function (data) {
+
+			$("#cities").empty()
+			
+			$.each(data,function(item,value) {
+
+				//alert(item + " " + value);
+				$("#cities").append("<option id='" + value + "' value='" + item + "'></option>");
+			});
+			
+
+		});	
+
+	}
+	$("#cities").focus();
+});
+
+
+$("#continue").click(function() {
+	var birthStr = $("#DOB").val();
+	var pass1 = $("#password").val();
+	var pass2 = $("#password2").val();
+	if (isDate(birthStr) == false)
+	{
+    	   $("#DOB").focus();
+	   $("#DOB").val("");
+
+	}
+	if (pass1 != pass2) {
+		$("#password2").focus();
+		alert("Passwords did not match!");
+		$("#password2").val("");
+	    }
+	$(".childDOB").each(function() {
+	birthStr = $(this).val();
+	if (isDate(birthStr) == false)
+	{
+	    $(this).focus();
+	    $(this).val("");
+		  
+	}
+	});
+	
+});
+
+$("#sendToWellness").click(function(){
+
+	if (signaturePad.isEmpty()) {
+		alert("Please provide a signature first.");
+	} else {
+		//Wellness submit logic goes here...
+		sendToWellness();
+	}
+
+});
+
+});
+   </script>
+
+    <footer class="footer">
+    <input type="button" class="button"  id="addMember" value="Add Another Member"/><br><br>
+    <button class="button" id="continue" style="font-size:30px">Continue</button><br><br>
+    <button id="resetForm" >Reset</button><br><br>
+</footer>
+</form>
+
+<div id="completed" class="modal">
+<div class="signature-pad">
+<p class="completeText">Registration Complete!</p>
+<img style= "max-width: 30%; border-radius:30%;display:block; margin-left:auto; margin-right:auto;" src="static/img/UEofficial.jpg">
+<p class="completeText"> Thank You!</p>
+</div>
+</div>
+
+
+<div id="signatureForm" class="modal">
+<div id="signature-pad" class="signature-pad">
+    <div class="signature-pad--body">
+      <canvas></canvas>
+    </div>
+    <div class="signature-pad--footer">
+      <div class="description">Sign above</div>
+
+      <div class="signature-pad--actions">
+        <div>
+          <input id="sendToWellness" type="button" class="button save" data-action="save-png" value="Submit" />
+          <input type="button" class="button clear" data-action="clear" value="Clear"/>
+          <input type="button" class="button" id="hideSignature" value="Cancel" />
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+<div id="processing" class="modal">
+<img style="display:block; margin-left:auto; margin-right:auto;" src="static/img/parkour.gif"/>
+</div>
+
+
+<div id="consentForm" class="modal"
+<div id="signature-pad" class="signature-pad">
+    <div class="signature-pad--consent">
+<h1>PARTICIPANT AGREEMENT, RELEASE AND ASSUMPTION OF RISK</h1>
+
+<p>In consideration of the services of Urban Evolution, their agents, owners, officers, volunteers, participants, employees, and all other persons or entities acting in any capacity on their behalf (hereinafter collectively referred to as “UE”), I hereby agree to release, indemnify, and discharge UE, on behalf of myself, my spouse, my children, my parents, my heirs, assigns, personal representative and </p>
+
+<p>1. I acknowledge that my participation in parkour, capoeira, aerial acrobatics, break dancing, fitness training and instruction activities entails known and unanticipated risks that could result in physical or emotional injury, paralysis, death, or damage to myself, to property, or to third parties. I understand that such risks simply cannot be eliminated without jeopardizing the essential qualities of the activity.</p>
+
+<p>The risks include, among other things: slips and falls; falling from equipment; rope burns; pinches, scrapes, twists and jolts that could result in scratches, bruises, sprains, lacerations, fractures, concussions, or even more severe life threatening hazards; muscular soreness, tears, strains, sprains, dislocations, fractures and broken bones; cuts, bruises, and muscle soreness; wrist, arm and shoulder injuries; musculoskeletal injuries including head, neck, and back; injuries to internal organs; the negligence of other people; my own physical condition; and the risk of emotional and psychological injuries or physical damage associated with this activity. In any event, if you or your child is injured, any medical assistance will at your Furthermore, UE employees have difficult jobs to perform. They seek safety, but they are not infallible. They might be unaware of a participant's fitness or abilities. They might misjudge the weather or other environmental conditions. They may give incomplete warnings or instructions, and the equipment being used might malfunction.</p>
+
+<p>2. I expressly agree and promise to accept and assume all of the risks existing in this activity. My participation in this activity is purely voluntary, and I elect to participate in spite of the risks.</p>
+
+<p>3. I hereby voluntarily release, forever discharge, and agree to indemnify and hold harmless UE from any and all claims, demands, or causes of action, which are in any way connected with my participation in this activity or my use of UE’s equipment or facilities, including any such claims which allege negligent acts or omissions of UE.</p>
+
+<p>4. Should UE or anyone acting on their behalf, be required to incur attorney's fees and costs to enforce this agreement, I agree to indemnify and hold them harmless for all such fees and costs.</p>
+
+<p>5. I certify that I have adequate insurance to cover any injury or damage I may cause or suffer while participating, or else I agree to bear the costs of such injury or damage myself. I further certify that I am willing to assume the risk of any medical or physical condition I may have.</p>
+
+<p>6. In the event that I file a lawsuit against UE, I agree to do so solely in the state of Virginia, and I further agree that the substantive law of that state shall apply in that action without regard to the conflict of law rules of that state. I agree that if any portion of this agreement is found to be void or unenforceable, the remaining document shall remain in full force and effect.</p>
+
+<p>7. I grant Urban Evolution and its designees the right to use my name, likeness, image, voice, appearance and performance whether recorded on or transferred to videotape, film, slides, photographs, audiotapes or other media, now known or later developed. This grant includes without limitation the right to edit, mix or duplicate, and to use or re-use recordings in whole or in part as Urban Evolution may elect. Urban Evolution or its designee shall have complete ownership of all recordings and media in which I appear, including copyright interest, and I acknowledge that I have no interest or ownership in the performances or their copyright. I also grant Urban Evolution and its designees the right to broadcast, exhibit, market, sell and otherwise distribute recordings, either in whole or in parts, and either alone or with other products, for commercial or non-commercial television or theater, closed-circuit exhibition, home video distribution or any other purpose that Urban Evolution or its designees in their sole discretion may determine. This grant includes the right to use the Product for promoting or publicizing any of the uses. I confirm that I have the right to enter into this Agreement, that I am not restricted by any commitments to other parties (including union memberships), and that Urban Evolution has no financial commitment or obligations to me as a result of this Agreement. I hereby give all clearances, copyright and otherwise, for the use of my name, likeness, image, voice, appearance and performance embodied in the Product. I expressly release and indemnify Urban Evolution and its officers, employees, agents and designees from any and all claims known or unknown arising out of or in any way connected with the above granted uses and representations. The rights granted Urban Evolution herein are perpetual and worldwide. In consideration of all of the above, I hereby give my consent without requiring compensation of any sort.</p>
+
+<p>Photographic, audio or video recordings may be used for: conference presentations, educational presentations or courses, informational presentations on-line educational courses, educational videos, promotional videos, or other purposes not listed here.</p>
+
+<p>By signing this release I understand this permission signifies that photographic or video recordings of me may be electronically displayed via the Internet or in the public educational setting. There is no time limit on the validity of this release, no union relations or documents signed will apply, nor is there any geographic limitation on where these materials may be distributed.</p>
+
+<p>By signing this document, I acknowledge that if anyone is hurt or property is damaged during my participation in this activity, I may be found by a court of law to have waived my right to maintain a lawsuit against UE on the basis of any claim from which I have released I have had sufficient opportunity to read this entire document. I have read and understood it, and I agree to be bound.</p>
+    <div class="signature-pad--footer">
+      <div class="description">Please read and accept the waiver.<div>
+
+      <div class="signature-pad--actions">
+        <div>
+          <input id="acceptWaiver" type="button" class="button" value="Accept" />
+        </div>
+        <div>
+          <input type="button" class="button" id="cancelConsent" value="Cancel" />
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+</div>
+
+<script src="static/js/signature_pad.js"></script>
+<script src="static/js/app.js"></script>
+<script>
+
+	function sendToWellness(){
+
+	var dateVal= $("#DOB").val();
+	var dateParts=dateVal.split("/");
+
+	var members = new Array();
+	
+
+	var postData = {
+  "address": $("#addr").val(), 
+  "city": $("#cty").val(), 
+  "city_code": 27495, 
+  "day": dateParts[1], 
+  "email": $("#email").val(), 
+  "fname": $("#firstname").val(), 
+  "gender": $("#gend").val(), 
+  "lname": $("#lastname").val(), 
+  "location": $("#gym").val(), 
+  "members": [], 
+  "month": dateParts[0], 
+  "phone": $("#mobile").val(), 
+  "phoneHome": $("#phone2").val(), 
+  "phoneWork": "", 
+  "postal": $("#zipCode").val(), 
+  "pwd": $("#password").val(), 
+  "year": dateParts[2],
+  "signature": signaturePad.toDataURL() 
+};
+
+	$("#members").children('div').each(function(){
+		var memberDateVal=$(this).find("input[name='dateBirth']").val();
+		var memberDateParts=memberDateVal.split("/");
+		postData['members'].push({"day": memberDateParts[1], 
+			      "fname": $(this).find("input[name='fname']").val(), 
+			      "gender": $(this).find("select[name='gender'] option:selected").val(), 
+			      "lname": $(this).find("input[name='lname']").val(), 
+			      "month": memberDateParts[0], 
+			      "year": memberDateParts[2]
+			     });
+	});
+
+	//alert(JSON.stringify(postData));
+
+	$("#signatureForm").css("display", "none");
+	$("#processing").css("display","block");
+	//post the information to wellness to create the member account
+
+	$.ajax({type:"POST"
+               ,url:"/createAccount"
+               ,data: JSON.stringify(postData)
+               ,contentType: "application/json; charset=utf-8"
+               ,dataType: "json"
+               ,success: function(msg) {
+
+		  if (JSON.stringify(msg).indexOf('"error":') > 0) {
+		  //alert( "success");
+	                  alert("An error occured: " + JSON.stringify(msg));
+			  $("#signatureForm").css("display", "block");
+		   	  $("#processing").css("display","none");
+		  } else {
+
+			  $("#result").empty().text(JSON.stringify(msg));
+			  $("#processing").css("display","none");
+			  $("#completed").css("display","block");
+			  $("#completed").delay(5000).fadeOut("slow",function(){
+					resetForm();
+				});
+		  }
+		}
+	       ,error: function (jqXHR,textStatus,errorThrown) {
+			alert("error: " + textStatus + " " + errorThrown + JSON.stringify(jqXHR));
+		}
+               });
+
+
+	//alert(JSON.stringify(postData));
+
+}
+
+
+</script>
+
+<!-- temporary holder for wellness results -->
+<div id="result">
+</div>
+
+</body>
+</html>
