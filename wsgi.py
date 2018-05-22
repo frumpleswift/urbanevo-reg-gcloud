@@ -12,6 +12,8 @@ import requests
 #import cStringIO
 from lxml import html
 from flask import Flask,request,jsonify
+import traceback
+import logging
 
 application = Flask(__name__)
 #application.run(host="173.236.138.191")
@@ -82,17 +84,26 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 
 	r = session.post(postURL[0], data=userData)
 
-#	print r.text
-	tree=html.fromstring(r.text.replace('\\',''))
+	#application.logger.error( r.text )
+	#extract response data including affirmation data
 
-	postURL=tree.xpath('//form/@action')
-	controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
+	try:
+		tree=html.fromstring(r.text.replace('\\',''))
 
-	affirmData={'wl-selfsignup-controller':controller[0]
-        	   ,'is_agree':1
-	           ,'s_signature':signature
-		   ,'a-ajax':1
-		   }
+		postURL=tree.xpath('//form/@action')
+		controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
+	
+		affirmData={'wl-selfsignup-controller':controller[0]
+        		   ,'is_agree':1
+	        	   ,'s_signature':signature
+			   ,'a-ajax':1
+			   }
+
+	except:
+
+		application.logger.error( "Error parsing add user request")
+		application.logger.error(r.text)
+		raise 
 
 	r = session.post(postURL[0],data=affirmData)
 
@@ -179,19 +190,26 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	r = session.get('https://www.wellnessliving.com/rs/login-agree.html')
 
 #	print r.text
-	tree=html.fromstring(r.text.replace('\\',''))
+	try:
+		tree=html.fromstring(r.text.replace('\\',''))
 
-	postURL='https://www.wellnessliving.com/a/ajax.html'
+		postURL='https://www.wellnessliving.com/a/ajax.html'
 
-	controller=tree.xpath("//script[contains(.,'Ajax._startup')]/text()")
-	ajaxID=str(controller[0]).split("'")[1]
+		controller=tree.xpath("//script[contains(.,'Ajax._startup')]/text()")
+		ajaxID=str(controller[0]).split("'")[1]
 
-	affirmData={'a-ajax':ajaxID
-        	   ,'a_data[is_catalog_register]':0
-	           ,'a_data[k_business]':78906 #urbanevo number?
-        	   ,'a_data[s_signature]':signature
-	   	   ,'s_method':'RsLogin::agreeBusiness'
-	           }
+		affirmData={'a-ajax':ajaxID
+        		   ,'a_data[is_catalog_register]':0
+	        	   ,'a_data[k_business]':78906 #urbanevo number?
+	        	   ,'a_data[s_signature]':signature
+		   	   ,'s_method':'RsLogin::agreeBusiness'
+	        	   }
+
+	except:
+
+		application.logger.error( "Error parsing add child request")
+		application.logger.error(r.text)
+		raise 
 
 	r = session.post(postURL,data=affirmData)
 
@@ -306,6 +324,8 @@ def createAccount():
 
 	except Exception as e:
 
+		#traceback.print_stack()		
+
 		return jsonify({"error":str(e)})
 
 		
@@ -316,6 +336,8 @@ def register():
 
 if __name__ == "__main__":
 
+	#gunicorn_logger = logging.getLogger('gunicorn.error')
+	#application.logger.handlers = gunicorn_logger.handlers
 	application.run()
 
 
