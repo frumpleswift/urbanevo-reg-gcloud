@@ -113,8 +113,8 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 		return r.text
 
 	except:
-		print "An Error occured while creating the account"
-		print r.text
+		print ("An Error occured while creating the account")
+		print (r.text)
 	
 
 def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
@@ -216,8 +216,8 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 
 		except:
 
-			print  "Error parsing add child request"
-			print r.text
+			print ("Error parsing add child request")
+			print (r.text)
 			raise 
 
 		r = session.post(postURL,data=affirmData)
@@ -226,8 +226,8 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 		return r.text
 
 	   except:
-		print "An error occured while adding a child"
-   		print r.text
+		print ("An error occured while adding a child")
+   		print (r.text)
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
@@ -335,7 +335,7 @@ def createAccount():
 
 				memberResult=memberResult+[addMember(member["fname"],member["lname"],content["email"],content["pwd"],content["phone"],content["phoneHome"],content["phoneWork"],member["month"],member["day"],member["year"],member["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])]
 
-				print "Member Added"
+				print ("Member Added")
 
 			return jsonify({"UserResult":userResult,"DependentResults":memberResult})
 
