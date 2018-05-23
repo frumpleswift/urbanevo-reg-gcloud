@@ -225,7 +225,7 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 #	print r.text
 		return r.text
 
-	   except:
+	except:
 		print ("An error occured while adding a child")
    		print (r.text)
 
