@@ -44,6 +44,8 @@ def verifyEmail(email):
 
 def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
 
+   try:
+
 	session = requests.Session()
 	r = session.get('https://www.wellnessliving.com/Wl/Selfsignup.html?a-ajax=1&id_page=1&s_secret=37RrPjmtY&uid=0&a-ajax=1&_=1516447931224')
 
@@ -110,7 +112,14 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 #	print r.text
 	return r.text
 
+   except:
+	print "An Error occured while creating the account"
+	print r.text
+	
+
 def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
+
+   try:
 
 	session = requests.Session()
 
@@ -207,14 +216,18 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 
 	except:
 
-		application.logger.error( "Error parsing add child request")
-		application.logger.error(r.text)
+		print  "Error parsing add child request"
+		print r.text
 		raise 
 
 	r = session.post(postURL,data=affirmData)
 
 #	print r.text
 	return r.text
+
+   except:
+	print "An error occured while adding a child"
+   	print r.text
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
@@ -309,6 +322,8 @@ def createAccount():
 		else:
 
 			userResult=createUser(content["fname"],content["lname"],content["email"],content["pwd"],content["phone"],content["phoneHome"],content["phoneWork"],content["month"],content["day"],content["year"],content["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])
+			
+			print "User Added"
 
 	#		print(userResult)
 
@@ -319,6 +334,8 @@ def createAccount():
 			#	print member
 
 				memberResult=memberResult+[addMember(member["fname"],member["lname"],content["email"],content["pwd"],content["phone"],content["phoneHome"],content["phoneWork"],member["month"],member["day"],member["year"],member["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])]
+
+				print "Member Added"
 
 			return jsonify({"UserResult":userResult,"DependentResults":memberResult})
 
