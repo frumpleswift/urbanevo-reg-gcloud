@@ -226,8 +226,8 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 		return r.text
 
 	except:
-		print ("An error occured while adding a child")
-   		print (r.text)
+		print("An error occured while adding a child")
+		print(r.text)
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
@@ -323,7 +323,7 @@ def createAccount():
 
 			userResult=createUser(content["fname"],content["lname"],content["email"],content["pwd"],content["phone"],content["phoneHome"],content["phoneWork"],content["month"],content["day"],content["year"],content["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])
 			
-			print "User Added"
+			print("User Added")
 
 	#		print(userResult)
 
