@@ -44,18 +44,18 @@ def verifyEmail(email):
 
 def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
 
-   try:
+	try:
 
-	session = requests.Session()
-	r = session.get('https://www.wellnessliving.com/Wl/Selfsignup.html?a-ajax=1&id_page=1&s_secret=37RrPjmtY&uid=0&a-ajax=1&_=1516447931224')
+		session = requests.Session()
+		r = session.get('https://www.wellnessliving.com/Wl/Selfsignup.html?a-ajax=1&id_page=1&s_secret=37RrPjmtY&uid=0&a-ajax=1&_=1516447931224')
 
-#	print r.text
-	tree=html.fromstring(r.text.replace('\\',''))
+#		print r.text
+		tree=html.fromstring(r.text.replace('\\',''))
 
-	postURL=tree.xpath('//form/@action')
-	controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
+		postURL=tree.xpath('//form/@action')
+		controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
 
-	userData={'wl-selfsignup-controller':controller[0]
+		userData={'wl-selfsignup-controller':controller[0]
 	         ,'s_secret':'37RrPjmtY'
 	         ,'a_image_upload[PassportLoginImage-new]':''
         	 ,'is_more':1
@@ -84,46 +84,46 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 	         ,'a-ajax':1
         	 }
 
-	r = session.post(postURL[0], data=userData)
+		r = session.post(postURL[0], data=userData)
 
 	#application.logger.error( r.text )
 	#extract response data including affirmation data
 
-	try:
-		tree=html.fromstring(r.text.replace('\\',''))
+		try:
+			tree=html.fromstring(r.text.replace('\\',''))
 
-		postURL=tree.xpath('//form/@action')
-		controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
+			postURL=tree.xpath('//form/@action')
+			controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
 	
-		affirmData={'wl-selfsignup-controller':controller[0]
+			affirmData={'wl-selfsignup-controller':controller[0]
         		   ,'is_agree':1
 	        	   ,'s_signature':signature
 			   ,'a-ajax':1
 			   }
 
-	except:
+		except:
 
-		application.logger.error( "Error parsing add user request")
-		application.logger.error(r.text)
-		raise 
+			application.logger.error( "Error parsing add user request")
+			application.logger.error(r.text)
+			raise 
 
-	r = session.post(postURL[0],data=affirmData)
+		r = session.post(postURL[0],data=affirmData)
 
 #	print r.text
-	return r.text
+		return r.text
 
-   except:
-	print "An Error occured while creating the account"
-	print r.text
+	except:
+		print "An Error occured while creating the account"
+		print r.text
 	
 
 def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
 
-   try:
+	try:
 
-	session = requests.Session()
+		session = requests.Session()
 
-	loginData={'i':0
+		loginData={'i':0
         	  ,'password':''
 	          ,'login':email
         	  ,'pwd':pwd
@@ -132,29 +132,29 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	          ,'tptwtd':''
         	  }
 
-	r = session.post('https://www.wellnessliving.com/login/urbanevo',data=loginData)
+		r = session.post('https://www.wellnessliving.com/login/urbanevo',data=loginData)
 
 #	print r.text
-	tree=html.fromstring(r.text.replace('\\',''))
+		tree=html.fromstring(r.text.replace('\\',''))
 
-	links=tree.xpath("//a[contains(@href,'profile.html') and contains(@href,'uid')]/@href")
+		links=tree.xpath("//a[contains(@href,'profile.html') and contains(@href,'uid')]/@href")
 
-	selfUID=str(links[0]).split('=')[-1]   #need to extract UID from the link which is the last parameter
+		selfUID=str(links[0]).split('=')[-1]   #need to extract UID from the link which is the last parameter
 
-	addProfileURL='https://www.wellnessliving.com/rs/profile-edit.html?uid_from='+selfUID
+		addProfileURL='https://www.wellnessliving.com/rs/profile-edit.html?uid_from='+selfUID
 
 	#Add Profile:
 	#Request:
-	r = session.get(addProfileURL)
+		r = session.get(addProfileURL)
 
 #	print r.text
 
-	tree=html.fromstring(r.text.replace('\\',''))
-	postURL=tree.xpath('//form/@action')
-	controller=tree.xpath('//input[@name="rs-profile-edit"]/@value')
+		tree=html.fromstring(r.text.replace('\\',''))
+		postURL=tree.xpath('//form/@action')
+		controller=tree.xpath('//input[@name="rs-profile-edit"]/@value')
 
 	#Edit Profile:
-	addData =   {"rs-profile-edit":controller[0]
+		addData =   {"rs-profile-edit":controller[0]
         	    ,"a_pay[uid]":0
 	            ,"a_family_relation[0][id_family_relation]":5
         	    ,"a_family_relation[0][uid_to]":selfUID
@@ -180,54 +180,54 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	            ,"uid_referrer":0
         	    }
 
-	r = session.post(postURL[0],data=addData)
+		r = session.post(postURL[0],data=addData)
 
 #	print r.text
-	tree=html.fromstring(r.text.replace('\\',''))
-	links=tree.xpath("//a[contains(@href,'relative-login') and contains(@title,'"+fname+"')]/@href")
+		tree=html.fromstring(r.text.replace('\\',''))
+		links=tree.xpath("//a[contains(@href,'relative-login') and contains(@title,'"+fname+"')]/@href")
 
-	signInURL=links[0]
-	addedUID=str(links[0]).split("=")[-1]
+		signInURL=links[0]
+		addedUID=str(links[0]).split("=")[-1]
 
 	#Sign Waiver:
 
 	#"sign in" as the added user
-	r = session.get(signInURL)
+		r = session.get(signInURL)
 
 #	print r.text
 	#now get the waiver form for the new user
-	r = session.get('https://www.wellnessliving.com/rs/login-agree.html')
+		r = session.get('https://www.wellnessliving.com/rs/login-agree.html')
 
 #	print r.text
-	try:
-		tree=html.fromstring(r.text.replace('\\',''))
+		try:
+			tree=html.fromstring(r.text.replace('\\',''))
 
-		postURL='https://www.wellnessliving.com/a/ajax.html'
+			postURL='https://www.wellnessliving.com/a/ajax.html'
 
-		controller=tree.xpath("//script[contains(.,'Ajax._startup')]/text()")
-		ajaxID=str(controller[0]).split("'")[1]
+			controller=tree.xpath("//script[contains(.,'Ajax._startup')]/text()")
+			ajaxID=str(controller[0]).split("'")[1]
 
-		affirmData={'a-ajax':ajaxID
+			affirmData={'a-ajax':ajaxID
         		   ,'a_data[is_catalog_register]':0
 	        	   ,'a_data[k_business]':78906 #urbanevo number?
 	        	   ,'a_data[s_signature]':signature
 		   	   ,'s_method':'RsLogin::agreeBusiness'
 	        	   }
 
-	except:
+		except:
 
-		print  "Error parsing add child request"
-		print r.text
-		raise 
+			print  "Error parsing add child request"
+			print r.text
+			raise 
 
-	r = session.post(postURL,data=affirmData)
+		r = session.post(postURL,data=affirmData)
 
 #	print r.text
-	return r.text
+		return r.text
 
-   except:
-	print "An error occured while adding a child"
-   	print r.text
+	   except:
+		print "An error occured while adding a child"
+   		print r.text
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
