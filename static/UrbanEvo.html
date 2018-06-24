@@ -196,13 +196,13 @@ button {
         	<div class="col">
     			<span>*</span>  
 	    		<label for="firstname">First Name:</label>
-	    		<input type="text" id="firstname" name="fname" required pattern = ".{2,}" placeholder="Your Name">
+	    		<input type="text" id="firstname" name="fname" required pattern = ".{2,}" placeholder="Your Name" maxlength="60">
      		</div>
             
             <div class="col2">
 				<span>*</span>
 	    		<label for="lastname">Last Name:</label>
-	    		<input type="text" id="lastname" name="lname" required pattern = ".{2,}" placeholder="Last Name">
+	    		<input type="text" id="lastname" name="lname" required pattern = ".{2,}" placeholder="Last Name" maxlength="60">
             </div>
             
         	<div class="col">
@@ -232,7 +232,7 @@ button {
             <div class="col2">
        			<span>*</span>
     			<label for="email">email:</label>
-    			<input type="text" id="email" name="email" required pattern= ".{2,}[@].{2,}[.][A-Za-z]{2,4}" placeholder="email">
+    			<input type="text" id="email" name="email" required pattern= ".{2,}[@].{2,}[.][A-Za-z]{2,4}" placeholder="email" maxlength="100">
         	</div>
             
             <div class="col">
@@ -250,13 +250,13 @@ button {
          	<div class="col">
         		<span>*</span>
 				<label for="addr">Address:</label>
-        		<input type="text" id="addr" name="address" required pattern=".{4,}" placeholder="address">
+        		<input type="text" id="addr" name="address" required pattern=".{4,}" placeholder="address" maxlength="200">
         	</div>
             
             <div class="col2">
         		<span>*</span>
         		<label for="cty">City:</label>
-        		<input list="cities" type="text" id="cty" name="city" required placeholder="city">
+        		<input list="cities" type="text" id="cty" name="city" required placeholder="city" maxlength="100">
 			<datalist id="cities">
 			</datalist>
         	</div>
@@ -269,20 +269,20 @@ button {
                 
          	<div class="col2">
                 <label for="referral">Referred By:</label>
-        		<input type="text" id="referral" name="referred" placeholder = "If you know a UE client, let us know who they are!">
+        		<input type="text" id="referral" name="referred" placeholder = "If you know a UE client, let us know who they are!" maxlength="100">
           	</div>
     
                 
        		<div class="col">
         		<span>*</span>
     			<label for="password">Password:</label>
-    			<input type="password" id="password" name="pwd" required pattern=".{6,}" placeholder="Create a new password for this account.">
+    			<input type="password" id="password" name="pwd" required pattern=".{6,}" placeholder="Create a new password for this account." maxlength="50">
 				</div>
                 
          	<div class="col2">
         		<span>*</span>
     			<label for="password2">Re-enter password:</label>
-    			<input type="password" id="password2" name="pwd2" required placeholder = "Please enter your new password again.">
+    			<input type="password" id="password2" name="pwd2" required placeholder = "Please enter your new password again." maxlength="50">
         	</div>
             
 		</div>
@@ -294,7 +294,7 @@ button {
 $(document).ready(function(){
         $("#addMember").click(function() {
         	members += 1;
-            	$("#members").append('<div class="containerChild" id="member'+members+'"><div class="row"><div class="col"><p><b>Additional Member:</b></p></div><div class="col2"><button id="removeMember'+members+'">Remove New Member</button></div><div class="col"><span>*</span><label for="firstname2">First Name:</label><input type="text" name="fname" required pattern = ".{2,}" placeholder="First Name"></div><div class="col2"><span>*</span><label for="lastname2">Last Name:</label><input type="text" name="lname" required pattern = ".{2,}" placeholder="Last Name"></div><div class="col"><span>*</span><label for="gend2">Gender:</label><select required name="gender"><option value=2>Female</option><option value=1>Male</option></select><br><br><span>*</span><label for="relationship">Relationship to Member:</label><select required name="relation"><option value=0>Child</option><option value=1>Spouse</option><option value=2>Friend</option><option value=3>Other</option></select><br></div><div class="col2"><span>*</span><label for="DOB">Date of Birth:</label><input type="text" id="DOB'+members+'" name="dateBirth" class="childDOB" required pattern="[0-1]{1}[0-9]{1}/[0-3]{1}[0-9]{1}/[0-9]{4}" placeholder="MM/DD/YYYY"><br></div></div></div>');
+            	$("#members").append('<div class="containerChild" id="member'+members+'"><div class="row"><div class="col"><p><b>Additional Member:</b></p></div><div class="col2"><button id="removeMember'+members+'">Remove New Member</button></div><div class="col"><span>*</span><label for="firstname2">First Name:</label><input type="text" name="fname" required pattern = ".{2,}" placeholder="First Name" maxlength="100"></div><div class="col2"><span>*</span><label for="lastname2">Last Name:</label><input type="text" name="lname" required pattern = ".{2,}" placeholder="Last Name" maxlength="100"></div><div class="col"><span>*</span><label for="gend2">Gender:</label><select required name="gender"><option value=2>Female</option><option value=1>Male</option></select><br><br><span>*</span><label for="relationship">Relationship to Member:</label><select required name="relation"><option value=0>Child</option><option value=1>Spouse</option><option value=2>Friend</option><option value=3>Other</option></select><br></div><div class="col2"><span>*</span><label for="DOB">Date of Birth:</label><input type="text" id="DOB'+members+'" name="dateBirth" class="childDOB" required pattern="[0-1]{1}[0-9]{1}/[0-3]{1}[0-9]{1}/[0-9]{4}" placeholder="MM/DD/YYYY"><br></div></div></div>');
 
 
 		$("#removeMember"+members).click(function() {$(this).parents(".containerChild").remove(); });
@@ -472,33 +472,21 @@ $("#sendToWellness").click(function(){
 <div id="consentForm" class="modal"
 <div id="signature-pad" class="signature-pad">
     <div class="signature-pad--consent">
-<h1>PARTICIPANT AGREEMENT, RELEASE AND ASSUMPTION OF RISK</h1>
-
-<p>In consideration of the services of Urban Evolution, their agents, owners, officers, volunteers, participants, employees, and all other persons or entities acting in any capacity on their behalf (hereinafter collectively referred to as “UE”), I hereby agree to release, indemnify, and discharge UE, on behalf of myself, my spouse, my children, my parents, my heirs, assigns, personal representative and </p>
-
-<p>1. I acknowledge that my participation in parkour, capoeira, aerial acrobatics, break dancing, fitness training and instruction activities entails known and unanticipated risks that could result in physical or emotional injury, paralysis, death, or damage to myself, to property, or to third parties. I understand that such risks simply cannot be eliminated without jeopardizing the essential qualities of the activity.</p>
-
-<p>The risks include, among other things: slips and falls; falling from equipment; rope burns; pinches, scrapes, twists and jolts that could result in scratches, bruises, sprains, lacerations, fractures, concussions, or even more severe life threatening hazards; muscular soreness, tears, strains, sprains, dislocations, fractures and broken bones; cuts, bruises, and muscle soreness; wrist, arm and shoulder injuries; musculoskeletal injuries including head, neck, and back; injuries to internal organs; the negligence of other people; my own physical condition; and the risk of emotional and psychological injuries or physical damage associated with this activity. In any event, if you or your child is injured, any medical assistance will at your Furthermore, UE employees have difficult jobs to perform. They seek safety, but they are not infallible. They might be unaware of a participant's fitness or abilities. They might misjudge the weather or other environmental conditions. They may give incomplete warnings or instructions, and the equipment being used might malfunction.</p>
-
-<p>2. I expressly agree and promise to accept and assume all of the risks existing in this activity. My participation in this activity is purely voluntary, and I elect to participate in spite of the risks.</p>
-
-<p>3. I hereby voluntarily release, forever discharge, and agree to indemnify and hold harmless UE from any and all claims, demands, or causes of action, which are in any way connected with my participation in this activity or my use of UE’s equipment or facilities, including any such claims which allege negligent acts or omissions of UE.</p>
-
-<p>4. Should UE or anyone acting on their behalf, be required to incur attorney's fees and costs to enforce this agreement, I agree to indemnify and hold them harmless for all such fees and costs.</p>
-
-<p>5. I certify that I have adequate insurance to cover any injury or damage I may cause or suffer while participating, or else I agree to bear the costs of such injury or damage myself. I further certify that I am willing to assume the risk of any medical or physical condition I may have.</p>
-
-<p>6. In the event that I file a lawsuit against UE, I agree to do so solely in the state of Virginia, and I further agree that the substantive law of that state shall apply in that action without regard to the conflict of law rules of that state. I agree that if any portion of this agreement is found to be void or unenforceable, the remaining document shall remain in full force and effect.</p>
-
-<p>7. I grant Urban Evolution and its designees the right to use my name, likeness, image, voice, appearance and performance whether recorded on or transferred to videotape, film, slides, photographs, audiotapes or other media, now known or later developed. This grant includes without limitation the right to edit, mix or duplicate, and to use or re-use recordings in whole or in part as Urban Evolution may elect. Urban Evolution or its designee shall have complete ownership of all recordings and media in which I appear, including copyright interest, and I acknowledge that I have no interest or ownership in the performances or their copyright. I also grant Urban Evolution and its designees the right to broadcast, exhibit, market, sell and otherwise distribute recordings, either in whole or in parts, and either alone or with other products, for commercial or non-commercial television or theater, closed-circuit exhibition, home video distribution or any other purpose that Urban Evolution or its designees in their sole discretion may determine. This grant includes the right to use the Product for promoting or publicizing any of the uses. I confirm that I have the right to enter into this Agreement, that I am not restricted by any commitments to other parties (including union memberships), and that Urban Evolution has no financial commitment or obligations to me as a result of this Agreement. I hereby give all clearances, copyright and otherwise, for the use of my name, likeness, image, voice, appearance and performance embodied in the Product. I expressly release and indemnify Urban Evolution and its officers, employees, agents and designees from any and all claims known or unknown arising out of or in any way connected with the above granted uses and representations. The rights granted Urban Evolution herein are perpetual and worldwide. In consideration of all of the above, I hereby give my consent without requiring compensation of any sort.</p>
-
-<p>Photographic, audio or video recordings may be used for: conference presentations, educational presentations or courses, informational presentations on-line educational courses, educational videos, promotional videos, or other purposes not listed here.</p>
-
-<p>By signing this release I understand this permission signifies that photographic or video recordings of me may be electronically displayed via the Internet or in the public educational setting. There is no time limit on the validity of this release, no union relations or documents signed will apply, nor is there any geographic limitation on where these materials may be distributed.</p>
-
-<p>By signing this document, I acknowledge that if anyone is hurt or property is damaged during my participation in this activity, I may be found by a court of law to have waived my right to maintain a lawsuit against UE on the basis of any claim from which I have released I have had sufficient opportunity to read this entire document. I have read and understood it, and I agree to be bound.</p>
+	    <h1>PARTICIPANT AGREEMENT, RELEASE AND ASSUMPTION OF RISK</h1>
+	    <p>In consideration of the services of Urban Evolution, their agents, owners, officers, volunteers, participants, employees, and all other persons or entities acting in any capacity on their behalf (hereinafter collectively referred to as "UE"), I hereby agree to release, indemnify, and discharge UE, on behalf of myself, my spouse, my children, my parents, my heirs, assigns, personal representative and</p>
+	    <p>1. I acknowledge that my participation in parkour, capoeira, aerial acrobatics, break dancing, fitness training and instruction activities entails known and unanticipated risks that could result in physical or emotional injury, paralysis, death, or damage to myself, to property, or to third parties. I understand that such risks simply cannot be eliminated without jeopardizing the essential qualities of the activity. The risks include, among other things: slips and falls; falling from equipment; rope burns; pinches, scrapes, twists and jolts that could result in scratches, bruises, sprains, lacerations, fractures, concussions, or even more severe life threatening hazards; muscular soreness, tears, strains, sprains, dislocations, fractures and broken bones; cuts, bruises, and muscle soreness; wrist, arm and shoulder injuries; musculoskeletal injuries including head, neck, and back; injuries to internal organs; the negligence of other people; my own physical condition; and the risk of emotional and psychological injuries or physical damage associated with this activity. In any event, if you or your child is injured, any medical assistance will be at your own expense. Furthermore, UE employees have difficult jobs to perform. They seek safety, but they are not infallible. They might be unaware of a participant's fitness or abilities. They might misjudge the weather or other environmental conditions. They may give incomplete warnings or instructions, and the equipment being used might malfunction.</p>
+	    <p>2. I expressly agree and promise to accept and assume all of the risks existing in this activity. My participation in this activity is purely voluntary, and I elect to participate in spite of the risks.</p>
+	    <p>3. I hereby voluntarily release, forever discharge, and agree to indemnify and hold harmless UE from any and all claims, demands, or causes of action, which are in any way connected with my participation in this activity or my use of UE’s equipment or facilities, including any such claims which allege negligent acts or omissions of UE.</p>
+	    <p>4. Should UE or anyone acting on their behalf, be required to incur attorney's fees and costs to enforce this agreement, I agree to indemnify and hold them harmless for all such fees and costs.</p>
+	    <p>5. I certify that I have adequate insurance to cover any injury or damage I may cause or suffer while participating, or else I agree to bear the costs of such injury or damage myself. I further certify that I am willing to assume the risk of any medical or physical condition I may have.</p>
+	    <p>6. In the event that I file a lawsuit against UE, I agree to do so solely in the state of Virginia, and I further agree that the substantive law of that state shall apply in that action without regard to the conflict of law rules of that state. I agree that if any portion of this agreement is found to be void or unenforceable, the remaining document shall remain in full force and effect.</p>
+	    <p>7. I grant Urban Evolution and its designees the right to use my name, likeness, image, voice, appearance and performance whether recorded on or transferred to digital images, digital video, videotape, film, slides, photographs, audiotapes or other media, now known or later developed. This grant includes without limitation the right to edit, mix or duplicate, and to use or re-use recordings in whole or in part as Urban Evolution may elect. Urban Evolution or its designee shall have complete ownership of all recordings and media in which I appear, including copyright interest, and I acknowledge that I have no interest or ownership in the performances or their copyright. I also grant Urban Evolution and its designees the right to broadcast, exhibit, market, sell and otherwise distribute recordings, either in whole or in parts, and either alone or with other products, for commercial or non-commercial television or theater, closed-circuit exhibition, home video distribution or any other purpose that Urban Evolution or its designees in their sole discretion may determine.</p>
+	    <p>This grant includes the right to use the Product for promoting or publicizing any of the uses. I confirm that I have the right to enter into this Agreement, that I am not restricted by any commitments to other parties (including union memberships), and that Urban Evolution has no financial commitment or obligations to me as a result of this Agreement. I hereby give all clearances, copyright and otherwise, for the use of my name, likeness, image, voice, appearance and performance embodied in the Product.</p>
+	    <p>I expressly release and indemnify Urban Evolution and its officers, employees, agents and designees from any and all claims known or unknown arising out of or in any way connected with the above granted uses and representations.</p>
+	    <p>The rights granted Urban Evolution herein are perpetual and worldwide. In consideration of all of the above, I hereby give my consent without requiring compensation of any sort. Photographic, audio or video recordings may be used for: conference presentations, educational presentations or courses, informational presentations on-line educational courses, educational videos, promotional videos, or other purposes not listed here.</p>
+	    <p>By signing this release I understand this permission signifies that photographic or video recordings of me may be electronically displayed via the Internet or in the public educational setting. There is no time limit on the validity of this release, no union relations or documents signed will apply, nor is there any geographic limitation on where these materials may be distributed. By signing this document, I acknowledge that if anyone is hurt or property is damaged during my participation in this activity, I may be found by a court of law to have waived my right to maintain a lawsuit against UE on the basis of any claim from which I have released them herein. I have had sufficient opportunity to read this entire document. I have read and understood it, and I agree to be bound.</p>
     <div class="signature-pad--footer">
-      <div class="description">Please read and accept the waiver.<div>
+      <div class="description">Please read and accept the waiver.</div>
 
       <div class="signature-pad--actions">
         <div>
@@ -578,7 +566,7 @@ $("#sendToWellness").click(function(){
 		   	  $("#processing").css("display","none");
 		  } else {
 
-			  $("#result").empty().text(JSON.stringify(msg));
+			  //$("#result").empty().text(JSON.stringify(msg));
 			  $("#processing").css("display","none");
 			  $("#completed").css("display","block");
 			  $("#completed").delay(5000).fadeOut("slow",function(){

@@ -22,7 +22,7 @@ def verifyEmail(email):
 
 
 	session = requests.Session()
-	r = session.get('https://www.wellnessliving.com/selfsignup/37RrPjmtY')
+	r = session.get('https://www.wellnessliving.com/selfsignup/37RrPjmtY', timeout=5)
 	
 	tree=html.fromstring(r.text.replace('\\',''))
 	
@@ -37,7 +37,7 @@ def verifyEmail(email):
              ,'s_method':'Wl\Login\Add\Ajax::mailVerifyPrompt'
 	     }
 
-	r=session.post("https://www.wellnessliving.com/a/ajax.html",data=emailData)
+	r=session.post("https://www.wellnessliving.com/a/ajax.html",data=emailData,timeout=10)
 
 	return r.text
 
@@ -47,13 +47,16 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 	try:
 
 		session = requests.Session()
-		r = session.get('https://www.wellnessliving.com/Wl/Selfsignup.html?a-ajax=1&id_page=1&s_secret=37RrPjmtY&uid=0&a-ajax=1&_=1516447931224')
+		r = session.get('https://www.wellnessliving.com/Wl/Selfsignup.html?a-ajax=1&id_page=1&s_secret=37RrPjmtY&uid=0&a-ajax=1&_=1516447931224',timeout=15)
 
 #		print r.text
 		tree=html.fromstring(r.text.replace('\\',''))
 
 		postURL=tree.xpath('//form/@action')
 		controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
+
+		print(controller)
+
 
 		userData={'wl-selfsignup-controller':controller[0]
 	         ,'s_secret':'37RrPjmtY'
@@ -72,7 +75,7 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 	         ,'i_month':month
         	 ,'i_day':day
 	         ,'i_year':year
-        	 ,'id_gender':gender
+        	 ,'id_gender':int(gender)
 	         ,'is_address_inherit':''
         	 ,'s_address':address
 	         ,'s_city_custom':city
@@ -84,17 +87,26 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 	         ,'a-ajax':1
         	 }
 
-		r = session.post(postURL[0], data=userData)
+
+		print(userData)
+
+		r = session.post(postURL[0], data=userData,timeout=45)
 
 	#application.logger.error( r.text )
 	#extract response data including affirmation data
 
 		try:
+			
 			tree=html.fromstring(r.text.replace('\\',''))
+
+			if "\"s_status\":\"post-error\"" in r.text:
+				raise Exception("An error occured while creating the User")
 
 			postURL=tree.xpath('//form/@action')
 			controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
-	
+			
+			#print (r.text)
+
 			affirmData={'wl-selfsignup-controller':controller[0]
         		   ,'is_agree':1
 	        	   ,'s_signature':signature
@@ -103,11 +115,11 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 
 		except:
 
-			application.logger.error( "Error parsing add user request")
-			application.logger.error(r.text)
+			#application.logger.error( "Error parsing add user request")
+			#application.logger.error(r.text)
 			raise 
 
-		r = session.post(postURL[0],data=affirmData)
+		r = session.post(postURL[0],data=affirmData,timeout=45)
 
 #	print r.text
 		return r.text
@@ -115,6 +127,10 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 	except:
 		print ("An Error occured while creating the account")
 		print (r.text)
+		raise 
+	finally:
+
+		session.close()	
 	
 
 def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
@@ -132,9 +148,11 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	          ,'tptwtd':''
         	  }
 
-		r = session.post('https://www.wellnessliving.com/login/urbanevo',data=loginData)
+		r = session.post('https://www.wellnessliving.com/login/urbanevo',data=loginData,timeout=30)
 
-#	print r.text
+		#print ("After Logon")
+		#print (r.text)
+		
 		tree=html.fromstring(r.text.replace('\\',''))
 
 		links=tree.xpath("//a[contains(@href,'profile.html') and contains(@href,'uid')]/@href")
@@ -147,7 +165,8 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	#Request:
 		r = session.get(addProfileURL)
 
-#	print r.text
+		#print ("Click add profile")
+		#print (r.text)
 
 		tree=html.fromstring(r.text.replace('\\',''))
 		postURL=tree.xpath('//form/@action')
@@ -180,9 +199,13 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	            ,"uid_referrer":0
         	    }
 
+		print("Child Data:")
+		print(addData)
+		print(postURL)
+
 		r = session.post(postURL[0],data=addData)
 
-#	print r.text
+		print (r.text)
 		tree=html.fromstring(r.text.replace('\\',''))
 		links=tree.xpath("//a[contains(@href,'relative-login') and contains(@title,'"+fname+"')]/@href")
 
@@ -196,7 +219,7 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 
 #	print r.text
 	#now get the waiver form for the new user
-		r = session.get('https://www.wellnessliving.com/rs/login-agree.html')
+		r = session.get('https://www.wellnessliving.com/rs/login-agree.html', timeout=30)
 
 #	print r.text
 		try:
@@ -220,7 +243,7 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 			print (r.text)
 			raise 
 
-		r = session.post(postURL,data=affirmData)
+		r = session.post(postURL,data=affirmData,timeout=60)
 
 #	print r.text
 		return r.text
@@ -228,12 +251,13 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	except:
 		print("An error occured while adding a child")
 		print(r.text)
+		raise 
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
     cityName.replace('_', ' ')
     session = requests.Session()
-    webdata = session.get('https://www.wellnessliving.com/a/combobox.html?a-ajax=1&s_id=city&s_name=k_city&s_unit=a.geo&s_value=' + cityName + '&a-ajax=1')
+    webdata = session.get('https://www.wellnessliving.com/a/combobox.html?a-ajax=1&s_id=city&s_name=k_city&s_unit=a.geo&s_value=' + cityName + '&a-ajax=1', timeout=15)
     longString = webdata.text
     cityDict = {}
                               
@@ -303,17 +327,38 @@ def sample():
 		}
 	return jsonify(sample)
 
+
+def formatPhone(phone):
+
+	if phone != "":
+
+		reg=re.compile('\D')
+		phone=reg.sub('',phone)
+		phone=phone[0:3]+"-"+phone[3:6]+"-"+phone[6:]
+	
+	print(phone)
+	return phone
+		
+
 @application.route('/createAccount',methods=['POST'])
 def createAccount():
 
 	try:
-
 		content = request.get_json(force=True)
+		print ("Registering " + content["email"]) 
 		#print content["parent"]["fname"]
 
+
+		phone=formatPhone(content["phone"])
+		phoneHome=formatPhone(content["phoneHome"])
+		phoneWork=formatPhone(content["phoneWork"])
+
+		print(phone,phoneHome,phoneWork)
+
+		
 		checkEmail=verifyEmail(content["email"])
 
-		print(checkEmail)
+		#print(checkEmail)
 
 		if "s_message" in checkEmail or "already" in checkEmail:
 
@@ -321,9 +366,9 @@ def createAccount():
 
 		else:
 
-			userResult=createUser(content["fname"],content["lname"],content["email"],content["pwd"],content["phone"],content["phoneHome"],content["phoneWork"],content["month"],content["day"],content["year"],content["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])
+			userResult=createUser(content["fname"],content["lname"],content["email"],content["pwd"],phone,phoneHome,phoneWork,content["month"],content["day"],content["year"],content["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])
 			
-			print("User Added")
+			print("User Added " + content["email"])
 
 	#		print(userResult)
 
@@ -333,9 +378,9 @@ def createAccount():
 
 			#	print member
 
-				memberResult=memberResult+[addMember(member["fname"],member["lname"],content["email"],content["pwd"],content["phone"],content["phoneHome"],content["phoneWork"],member["month"],member["day"],member["year"],member["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])]
+				memberResult=memberResult+[addMember(member["fname"],member["lname"],content["email"],content["pwd"],phone,phoneHome,phoneWork,member["month"],member["day"],member["year"],member["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])]
 
-				print ("Member Added")
+				print ("Child Added " + member["fname"])
 
 			return jsonify({"UserResult":userResult,"DependentResults":memberResult})
 
