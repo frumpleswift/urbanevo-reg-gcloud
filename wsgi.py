@@ -88,7 +88,7 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
         	 }
 
 
-		print(userData)
+		#print(userData)
 
 		r = session.post(postURL[0], data=userData,timeout=45)
 
@@ -199,13 +199,13 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	            ,"uid_referrer":0
         	    }
 
-		print("Child Data:")
-		print(addData)
-		print(postURL)
+		#print("Child Data:")
+		#print(addData)
+		#print(postURL)
 
 		r = session.post(postURL[0],data=addData)
 
-		print (r.text)
+		#print (r.text)
 		tree=html.fromstring(r.text.replace('\\',''))
 		links=tree.xpath("//a[contains(@href,'relative-login') and contains(@title,'"+fname+"')]/@href")
 
@@ -336,7 +336,7 @@ def formatPhone(phone):
 		phone=reg.sub('',phone)
 		phone=phone[0:3]+"-"+phone[3:6]+"-"+phone[6:]
 	
-	print(phone)
+	#print(phone)
 	return phone
 		
 
