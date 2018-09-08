@@ -10,35 +10,35 @@
 <link rel="stylesheet" href="static/css/signature-pad.css">
 
 <script>
-function isDate(dateStr) { 
-    var month = dateStr.slice(0,2); 
-    var day = dateStr.slice(3,5); 
-    var year = dateStr.slice(6); 
+function isDate(dateStr) {
+    var month = dateStr.slice(0,2);
+    var day = dateStr.slice(3,5);
+    var year = dateStr.slice(6);
 
-    if (month < 1 || month > 12) { 
-        alert("Month must be between 1 and 12."); 
-        return false; 
-    } 
+    if (month < 1 || month > 12) {
+        alert("Month must be between 1 and 12.");
+        return false;
+    }
 
-    if (day < 1 || day > 31) { 
-        alert("Day must be between 1 and 31."); 
-        return false; 
-    } 
+    if (day < 1 || day > 31) {
+        alert("Day must be between 1 and 31.");
+        return false;
+    }
 
-    if ((month==4 || month==6 || month==9 || month==11) && day==31) { 
-        alert("Month "+month+" doesn't have 31 days!") 
-        return false; 
-    } 
+    if ((month==4 || month==6 || month==9 || month==11) && day==31) {
+        alert("Month "+month+" doesn't have 31 days!")
+        return false;
+    }
 
-    if (month == 2) { 
-        var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)); 
-        if (day > 29 || (day==29 && !isleap)) { 
-            alert("February " + year + " doesn't have " + day + " days!"); 
-            return false; 
-        } 
-    } 
-    return true; 
-} 
+    if (month == 2) {
+        var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+        if (day > 29 || (day==29 && !isleap)) {
+            alert("February " + year + " doesn't have " + day + " days!");
+            return false;
+        }
+    }
+    return true;
+}
 
 function resetForm() {
 $("input[type=text], textarea").val("");
@@ -77,7 +77,7 @@ h2 {color:white;}
 span {color:red;}
 input[type=text], input[type=tel], input[type=password], input[type=date]{
 	width: 98%;
-	padding: 12px 20px;
+	padding: 4px 20px;
 	margin: 8px 4px;
 	display:block;
 	border: 1px solid #aaa;
@@ -85,13 +85,13 @@ input[type=text], input[type=tel], input[type=password], input[type=date]{
 	box-sizing: border-box;
 	background-color: white;
 	}
-    
+
 input:focus{
 	border:1px solid #888;
 }
-    
+
 input[type=submit] {
-	width: 40%;
+	width: 30%;
 	background-color:hsl(0, 100%, 35%);
 	color: white;
 	padding: 14px 20px;
@@ -110,14 +110,14 @@ input[type=submit]:hover {
 	border-radius: 5px;
   	background-color: white;
 	padding: 20px;
-}  
+}
 .containerChild {
     border-radius: 5px;
     background-color: white;
     padding: 1px 20px 20px 20px;
     border-top: 2px dotted black;
     }
-    
+
 .footer {
 	border-radius: 5px;
     background-color: white;
@@ -128,7 +128,7 @@ input[type=submit]:hover {
     float: left;
     width: 48%;
     margin-left:3px;
-   
+
 }
 .col2 {
 	float:left;
@@ -160,15 +160,15 @@ button {
 }
 
 .button {
-    background-color: hsl(0, 100%, 35%); 
+    background-color: hsl(0, 100%, 35%);
     border: none;
-    border-radius:5px;
-    width:40%;
+    border-radius:10px;
+    width:32%;
     color: white;
     padding: 15px 16px;
     text-align: center;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 20px;
     margin: 4px 2px;
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
@@ -179,32 +179,42 @@ button {
     background-color: hsl(0, 100%, 65%);
     color: black;
 }
+.headCol {float:left;}
+  @media(max-width: 900px) {
+    .headCol {width:30%}
+  }
+  @media(max-width:750px) {
+    .headCol {float:none;
+              width:auto}
+  }
 
 </style>
 </head>
 <body>
 
 <header>
-<img src="static/img/logo.png">
-<h2>New Member Information</h2><span style="color:white;">Already have an account and need to add a child to your account? Login with your email and password <a href="https://wellnessliving.com/schedule/urbanevo">here</a></span>
-<p style="color:white;"><b><u>Adult</u></b> Member/ Parent / Guardian Info</p>
+<p>
+<img class="headCol" src="static/img/logo.png" style="margin:0px 40px;vertical-align:middle"><br>
+<p style="color:white;font-size: 20px;margin:0px 40px"><b>New <u>Adult</u> Member/Parent/Guardian Info</b><br>
+<span style="color:white;font-size: 15px">Already have an account and need to add a child? Login with your email and password <a href="https://wellnessliving.com/schedule/urbanevo">here</a></span>
+<br></p>
 </header>
 
 <form id="theForm">
     <div class="container">
     	<div class="row">
         	<div class="col">
-    			<span>*</span>  
+    			<span>*</span>
 	    		<label for="firstname">First Name:</label>
 	    		<input type="text" id="firstname" name="fname" required pattern = ".{2,}" placeholder="Your Name" maxlength="60">
      		</div>
-            
+
             <div class="col2">
 				<span>*</span>
 	    		<label for="lastname">Last Name:</label>
 	    		<input type="text" id="lastname" name="lname" required pattern = ".{2,}" placeholder="Last Name" maxlength="60">
             </div>
-            
+
         	<div class="col">
         		<span>*</span>
         		<label for="gend">Gender:</label>
@@ -213,28 +223,28 @@ button {
       				<option value=1>Male</option>
         		</select><br><br>
            	</div>
-            
+
             <div class="col2">
             	<label for="gym">Gym Location:</label>
     			<select id="gym" name="location">
       				<option value=81269>Urban Evolution Alexandria</option>
       				<option value=208833>Urban Evolution Sterling</option>
-      		
+
         		</select><br><br>
           	</div>
-            
+
             <div class="col">
         		<span>*</span>
         		<label for="DOB">Date of Birth:</label>
         		<input type="text" id="DOB" name="dateBirth" required pattern="[0-1]{1}[0-9]{1}/[0-3]{1}[0-9]{1}/[0-9]{4}" placeholder="MM/DD/YYYY">
        		</div>
-            
+
             <div class="col2">
        			<span>*</span>
     			<label for="email">email:</label>
     			<input type="text" id="email" name="email" required pattern= ".{2,}[@].{2,}[.][A-Za-z]{2,4}" placeholder="email" maxlength="100">
         	</div>
-            
+
             <div class="col">
         		<span>*</span>
         		<label for="mobile">Phone #:</label>
@@ -246,13 +256,13 @@ button {
 	    		<input type="tel" id="phone2" name="phoneHome"
            pattern="[[0-9]{3}[- ]*[0-9]{3}[- ]*[0-9]{4}" placeholder="xxx-xxx-xxxx">
            	</div>
-         
+
          	<div class="col">
         		<span>*</span>
 				<label for="addr">Address:</label>
         		<input type="text" id="addr" name="address" required pattern=".{4,}" placeholder="address" maxlength="200">
         	</div>
-            
+
             <div class="col2">
         		<span>*</span>
         		<label for="cty">City:</label>
@@ -260,34 +270,34 @@ button {
 			<datalist id="cities">
 			</datalist>
         	</div>
-            
+
             <div class="col">
         		<span>*</span>
         		<label for="zipCode">Postal/Zip Code:</label>
-        		<input type="text" id="zipCode" name="postal" required pattern = "[0-9]{5}[- ]*[0-9]{0,4}" placeholder="postal or zip code"> 
+        		<input type="text" id="zipCode" name="postal" required pattern = "[0-9]{5}[- ]*[0-9]{0,4}" placeholder="postal or zip code">
                 </div>
-                
+
          	<div class="col2">
                 <label for="referral">Referred By:</label>
         		<input type="text" id="referral" name="referred" placeholder = "If you know a UE client, let us know who they are!" maxlength="100">
           	</div>
-    
-                
+
+
        		<div class="col">
         		<span>*</span>
     			<label for="password">Password:</label>
     			<input type="password" id="password" name="pwd" required pattern=".{6,}" placeholder="Create a new password for this account." maxlength="50">
 				</div>
-                
+
          	<div class="col2">
         		<span>*</span>
     			<label for="password2">Re-enter password:</label>
     			<input type="password" id="password2" name="pwd2" required placeholder = "Please enter your new password again." maxlength="50">
         	</div>
-            
+
 		</div>
 	</div>
-    
+
 	<div id="members"></div>
     <script>
     	var members = 0;
@@ -306,8 +316,8 @@ $("#resetForm").click(function() {
 
 $("#DOB").blur(function() {
  var birthStr = $("#DOB").val();
-   if (birthStr != "") 
-	{	
+   if (birthStr != "")
+	{
    	if (isDate(birthStr) == true)
 	    {
         	var d = new Date(birthStr);
@@ -327,16 +337,16 @@ $("#DOB").blur(function() {
 
 $("#theForm").submit(function(event){
 	event.preventDefault();
-	$("#consentForm").css("display", "block"); 
-	//resizeCanvas(); 
+	$("#consentForm").css("display", "block");
+	//resizeCanvas();
 });
 
 $("#hideSignature").click(function(){$("#signatureForm").css("display", "none");});
 
 $("#cancelConsent").click(function(){$("#consentForm").css("display", "none");});
 
-$("#acceptWaiver").click(function(){ 
-	$("#consentForm").css("display", "none"); 
+$("#acceptWaiver").click(function(){
+	$("#consentForm").css("display", "none");
 	$("#signatureForm").css("display", "block");
 	resizeCanvas();
 });
@@ -354,11 +364,11 @@ $("#email").blur(function() {
 
 				alert("Email address already associated with an account!");
 				$("#email").val("").focus();
-					
+
 
 			}
 
-		});	
+		});
 
 	}
 
@@ -373,15 +383,15 @@ $("#cty").keyup(function() {
 		$.get("/city/"+city, function (data) {
 
 			$("#cities").empty()
-			
+
 			$.each(data,function(item,value) {
 
 				//alert(item + " " + value);
 				$("#cities").append("<option id='" + value + "' value='" + item + "'></option>");
 			});
-			
 
-		});	
+
+		});
 
 	}
 	$("#cities").focus();
@@ -409,10 +419,10 @@ $("#continue").click(function() {
 	{
 	    $(this).focus();
 	    $(this).val("");
-		  
+
 	}
 	});
-	
+
 });
 
 $("#sendToWellness").click(function(){
@@ -423,6 +433,7 @@ $("#sendToWellness").click(function(){
 		//Wellness submit logic goes here...
 		sendToWellness();
 	}
+5
 
 });
 
@@ -430,9 +441,9 @@ $("#sendToWellness").click(function(){
    </script>
 
     <footer class="footer">
-    <input type="button" class="button"  id="addMember" value="Add Another Member"/><br><br>
-    <button class="button" id="continue" style="font-size:30px">Continue</button><br><br>
-    <button id="resetForm" >Reset</button><br><br>
+    <input type="button" class="button"  id="addMember" value="Add Child"/>
+    <button class="button" id="continue" >Continue</button>
+    <button class="button" id="resetForm" style="background-color: hsl(0, 100%, 15%)">Reset</button>
 </footer>
 </form>
 
@@ -511,37 +522,37 @@ $("#sendToWellness").click(function(){
 	var dateParts=dateVal.split("/");
 
 	var members = new Array();
-	
+
 
 	var postData = {
-  "address": $("#addr").val(), 
-  "city": $("#cty").val(), 
-  "city_code": 27495, 
-  "day": dateParts[1], 
-  "email": $("#email").val(), 
-  "fname": $("#firstname").val(), 
-  "gender": $("#gend").val(), 
-  "lname": $("#lastname").val(), 
-  "location": $("#gym").val(), 
-  "members": [], 
-  "month": dateParts[0], 
-  "phone": $("#mobile").val(), 
-  "phoneHome": $("#phone2").val(), 
-  "phoneWork": "", 
-  "postal": $("#zipCode").val(), 
-  "pwd": $("#password").val(), 
+  "address": $("#addr").val(),
+  "city": $("#cty").val(),
+  "city_code": 27495,
+  "day": dateParts[1],
+  "email": $("#email").val(),
+  "fname": $("#firstname").val(),
+  "gender": $("#gend").val(),
+  "lname": $("#lastname").val(),
+  "location": $("#gym").val(),
+  "members": [],
+  "month": dateParts[0],
+  "phone": $("#mobile").val(),
+  "phoneHome": $("#phone2").val(),
+  "phoneWork": "",
+  "postal": $("#zipCode").val(),
+  "pwd": $("#password").val(),
   "year": dateParts[2],
-  "signature": signaturePad.toDataURL() 
+  "signature": signaturePad.toDataURL()
 };
 
 	$("#members").children('div').each(function(){
 		var memberDateVal=$(this).find("input[name='dateBirth']").val();
 		var memberDateParts=memberDateVal.split("/");
-		postData['members'].push({"day": memberDateParts[1], 
-			      "fname": $(this).find("input[name='fname']").val(), 
-			      "gender": $(this).find("select[name='gender'] option:selected").val(), 
-			      "lname": $(this).find("input[name='lname']").val(), 
-			      "month": memberDateParts[0], 
+		postData['members'].push({"day": memberDateParts[1],
+			      "fname": $(this).find("input[name='fname']").val(),
+			      "gender": $(this).find("select[name='gender'] option:selected").val(),
+			      "lname": $(this).find("input[name='lname']").val(),
+			      "month": memberDateParts[0],
 			      "year": memberDateParts[2]
 			     });
 	});
