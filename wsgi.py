@@ -1,7 +1,7 @@
 #!/bin/python
 ##########################################################
 #This is a Flask RESTful wrapper
-#To expose the 
+#To expose the
 #
 ##########################################################
 import re
@@ -14,6 +14,7 @@ from lxml import html
 from flask import Flask,request,jsonify
 import traceback
 import logging
+import hashlib
 
 application = Flask(__name__)
 #application.run(host="173.236.138.191")
@@ -23,9 +24,9 @@ def verifyEmail(email):
 
 	session = requests.Session()
 	r = session.get('https://www.wellnessliving.com/selfsignup/37RrPjmtY', timeout=5)
-	
+
 	tree=html.fromstring(r.text.replace('\\',''))
-	
+
 	controller=tree.xpath("//script[contains(.,'Ajax._startup')]/text()")
 	ajaxID=str(controller[0]).split("'")[1]
 
@@ -49,14 +50,10 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 		session = requests.Session()
 		r = session.get('https://www.wellnessliving.com/Wl/Selfsignup.html?a-ajax=1&id_page=1&s_secret=37RrPjmtY&uid=0&a-ajax=1&_=1516447931224',timeout=15)
 
-#		print r.text
 		tree=html.fromstring(r.text.replace('\\',''))
 
 		postURL=tree.xpath('//form/@action')
 		controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
-
-		print(controller)
-
 
 		userData={'wl-selfsignup-controller':controller[0]
 	         ,'s_secret':'37RrPjmtY'
@@ -86,17 +83,12 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
         	 ,'uid_referrer':0
 	         ,'a-ajax':1
         	 }
-
-
 		#print(userData)
-
 		r = session.post(postURL[0], data=userData,timeout=45)
-
 	#application.logger.error( r.text )
 	#extract response data including affirmation data
-
 		try:
-			
+
 			tree=html.fromstring(r.text.replace('\\',''))
 
 			if "\"s_status\":\"post-error\"" in r.text:
@@ -104,7 +96,7 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 
 			postURL=tree.xpath('//form/@action')
 			controller=tree.xpath('//input[@name="wl-selfsignup-controller"]/@value')
-			
+
 			#print (r.text)
 
 			affirmData={'wl-selfsignup-controller':controller[0]
@@ -117,7 +109,7 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 
 			#application.logger.error( "Error parsing add user request")
 			#application.logger.error(r.text)
-			raise 
+			raise
 
 		r = session.post(postURL[0],data=affirmData,timeout=45)
 
@@ -127,43 +119,24 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 	except:
 		print ("An Error occured while creating the account")
 		print (r.text)
-		raise 
+		raise
 	finally:
 
-		session.close()	
-	
+		session.close()
+
 
 def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
 
 	try:
 
-		session = requests.Session()
-
-		loginData={'i':0
-        	  ,'password':''
-	          ,'login':email
-        	  ,'pwd':pwd
-	          ,'s_captcha':''
-        	  ,'b_submit':'Log in'
-	          ,'tptwtd':''
-        	  }
-
-		r = session.post('https://www.wellnessliving.com/login/urbanevo',data=loginData,timeout=30)
-
-		#print ("After Logon")
-		#print (r.text)
-		
-		tree=html.fromstring(r.text.replace('\\',''))
-
-		links=tree.xpath("//a[contains(@href,'profile.html') and contains(@href,'uid')]/@href")
-
-		selfUID=str(links[0]).split('=')[-1]   #need to extract UID from the link which is the last parameter
-
-		addProfileURL='https://www.wellnessliving.com/rs/profile-edit.html?uid_from='+selfUID
+		session = userlogin(pwd,email)
+		#print(session)
+		addProfileURL='https://www.wellnessliving.com/rs/profile-edit.html?uid_from='+session["uid"]
 
 	#Add Profile:
 	#Request:
-		r = session.get(addProfileURL)
+		#print(session["session"].get(addProfileURL))
+		r = session["session"].get(addProfileURL)
 
 		#print ("Click add profile")
 		#print (r.text)
@@ -176,7 +149,7 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 		addData =   {"rs-profile-edit":controller[0]
         	    ,"a_pay[uid]":0
 	            ,"a_family_relation[0][id_family_relation]":5
-        	    ,"a_family_relation[0][uid_to]":selfUID
+        	    ,"a_family_relation[0][uid_to]":session["uid"]
 	            ,"a_image_upload[PassportLoginImage-new]":""
         	    ,"is_more":1
 	            ,"s_firstname":fname
@@ -203,7 +176,7 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 		#print(addData)
 		#print(postURL)
 
-		r = session.post(postURL[0],data=addData)
+		r = session["session"].post(postURL[0],data=addData)
 
 		#print (r.text)
 		tree=html.fromstring(r.text.replace('\\',''))
@@ -215,11 +188,11 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	#Sign Waiver:
 
 	#"sign in" as the added user
-		r = session.get(signInURL)
+		r = session["session"].get(signInURL)
 
 #	print r.text
 	#now get the waiver form for the new user
-		r = session.get('https://www.wellnessliving.com/rs/login-agree.html', timeout=30)
+		r = session["session"].get('https://www.wellnessliving.com/rs/login-agree.html', timeout=30)
 
 #	print r.text
 		try:
@@ -241,9 +214,9 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 
 			print ("Error parsing add child request")
 			print (r.text)
-			raise 
+			raise
 
-		r = session.post(postURL,data=affirmData,timeout=60)
+		r = session["session"].post(postURL,data=affirmData,timeout=60)
 
 #	print r.text
 		return r.text
@@ -251,7 +224,7 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 	except:
 		print("An error occured while adding a child")
 		print(r.text)
-		raise 
+		raise
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
@@ -260,7 +233,7 @@ def getCities(cityName):
     webdata = session.get('https://www.wellnessliving.com/a/combobox.html?a-ajax=1&s_id=city&s_name=k_city&s_unit=a.geo&s_value=' + cityName + '&a-ajax=1', timeout=15)
     longString = webdata.text
     cityDict = {}
-                              
+
 
     cityArray = longString.split("ac-span-item-city-")
     del cityArray[0]
@@ -277,7 +250,7 @@ def hello_world():
 @application.route('/emailCheck/<string:email>')
 def checkEmail(email):
 
-	return verifyEmail(email)    
+	return verifyEmail(email)
 
 @application.route('/help')
 def help():
@@ -335,17 +308,17 @@ def formatPhone(phone):
 		reg=re.compile('\D')
 		phone=reg.sub('',phone)
 		phone=phone[0:3]+"-"+phone[3:6]+"-"+phone[6:]
-	
+
 	#print(phone)
 	return phone
-		
+
 
 @application.route('/createAccount',methods=['POST'])
 def createAccount():
 
 	try:
 		content = request.get_json(force=True)
-		print ("Registering " + content["email"]) 
+		print ("Registering " + content["email"])
 		#print content["parent"]["fname"]
 
 
@@ -355,7 +328,7 @@ def createAccount():
 
 		print(phone,phoneHome,phoneWork)
 
-		
+
 		checkEmail=verifyEmail(content["email"])
 
 		#print(checkEmail)
@@ -367,7 +340,7 @@ def createAccount():
 		else:
 
 			userResult=createUser(content["fname"],content["lname"],content["email"],content["pwd"],phone,phoneHome,phoneWork,content["month"],content["day"],content["year"],content["gender"],content["address"],content["city"],content["postal"],content["location"],content["signature"],content["city_code"])
-			
+
 			print("User Added " + content["email"])
 
 	#		print(userResult)
@@ -386,20 +359,77 @@ def createAccount():
 
 	except Exception as e:
 
-		#traceback.print_stack()		
+		#traceback.print_stack()
 
 		return jsonify({"error":str(e)})
 
-		
+
 
 @application.route('/register')
 def register():
 	return application.send_static_file('UrbanEvo.html')
 
+#@application.route('/testlogin')
+def userlogin(password, email):
+
+	#password="thispasswordsucks"
+	#email='a.aaaaaa@bbb.ccc'
+	#start a session by pulling up the login page
+	session = requests.Session()
+	r = session.get('https://www.wellnessliving.com/login/urbanevo',timeout=30)
+
+	#need to get the csrf from the reply
+	#"a_form_csrf['core-request-api']='0TC8QbYNvdCYYOTj-VVnPqhcQwD8'"
+	csrfPos = [m.start() for m in re.finditer("a_form_csrf\[\'core-request-api\'\]\=\'", r.text)]
+	#print(len("a_form_csrf['core-request-api']='0TC8QbYNvdCYYOTj-VVnPqhcQwD8';"))
+	#print(len("a_form_csrf['core-request-api']='0TC8QbYNvdCYYOTj-VVnPqhcQwD8';"))
+	#print(csrfPos)
+	#print(r.text[csrfPos[0]:csrfPos[0]+63])
+	csrf=r.text[csrfPos[0]:csrfPos[0]+63][33:61]
+	#print(csrf)
+
+	#retrieve a salt from the salt service
+	#notepadPost={"s_login":email,"s_type":"","csrf":"0TC8QbYNvdCYYOTj-VVnPqhcQwD8","_":"1538843048758"}
+	notepad=session.get('https://www.wellnessliving.com/Core/Passport/Login/Enter/Notepad.json?s_login='+email+'&s_type=&csrf=' + csrf + '&_=1538843048758')
+	notepadData=notepad.json()
+	#print(notepadData)
+	#print(notepadData["s_notepad"])
+	salt=notepadData["s_notepad"]
+
+	#this is a copy from the wellness js that handles the "passport" processself.
+	#i believe this is the hashing mechanism used on the server side to store password
+	s_hash=''
+	delim=['r','4S','zqX','zqiOK','TLVS75V','Ue5aLaIIG75','uODJYM2JsCX4G','kt58wZfHHGQkHW4QN','Lh9Fl5989crMU4E7P6E']
+	for a in delim:
+		s_hash=s_hash+a+password
+
+	firstHash= salt + hashlib.sha3_512(s_hash.encode('utf-8')).hexdigest()
+
+	secondHash=hashlib.sha3_512(firstHash.encode('utf-8')).hexdigest()
+
+	loginData={'i':0
+	  ,'s_password':secondHash
+	  ,'s_login': email
+	  ,'s_notepad':notepadData["s_notepad"]
+	  ,'s_captcha':''
+	  ,'csrf':csrf
+	  }
+
+	loginResponse=session.post("https://www.wellnessliving.com/Core/Passport/Login/Enter/Enter.json",data=loginData)
+	#print(loginResponse.json())
+	#print ("After Logon")
+
+	#need to get the UiD
+	userInfoGet=session.get("https://www.wellnessliving.com/Core/Passport/Login/Info.json?csrf="+csrf+"&_=1538843048759")
+	userInfo=userInfoGet.json()
+	#print(userInfo)
+	#print(userInfo["uid"])
+	#getuserinfo=session.get("https://www.wellnessliving.com//rs/schedule/urbanevo?k_class_tab=2868&uid=12314053&id_class_tab=1")
+	return {"session":session,"uid":userInfo["uid"],"csrf":csrf}
+
 if __name__ == "__main__":
 
 	#gunicorn_logger = logging.getLogger('gunicorn.error')
 	#application.logger.handlers = gunicorn_logger.handlers
-	application.run()
-
-
+	application.run(debug=True,host='0.0.0.0', port=8080)
+	#application.run()
