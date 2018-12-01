@@ -245,7 +245,7 @@ def getCities(cityName):
 
 @application.route('/')
 def hello_world():
-	return 'Under Construction'
+	return register() 
 
 @application.route('/emailCheck/<string:email>')
 def checkEmail(email):
