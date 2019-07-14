@@ -116,20 +116,21 @@ def createUser(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,ge
 #	print r.text
 		return r.text
 
-	except:
-		print ("An Error occured while creating the account")
+	except Exception as e:
+		print ("An Error occurred while creating the account")
 		print (r.text)
-		raise
+		return jsonify({"error": "An Error occurred creating the account: " + str(e)})
 	finally:
 
 		session.close()
 
 
-def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495):
+def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495, attempt=1):
 
 	try:
 
 		session = userlogin(pwd,email)
+
 		#print(session)
 		addProfileURL='https://www.wellnessliving.com/rs/profile-edit.html?uid_from='+session["uid"]
 
@@ -221,10 +222,13 @@ def addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gen
 #	print r.text
 		return r.text
 
-	except:
-		print("An error occured while adding a child")
-		print(r.text)
-		raise
+	except Exception as e:
+		print("An error occurred while adding a child on attempt {}".format(attempt))
+		if attempt <= 10:
+			print("Retry creating child {} {} for {}".format(fname,lname,email))
+			return addMember(fname,lname,email,pwd,phone,phoneHome,phoneWork,month,day,year,gender,address,city,postal,location,signature,city_code=27495, attempt=attempt+1)
+		print("Final attempt to create child failed")
+		return jsonify({"error": "Error creating child: "+str(e)})
 
 @application.route("/city/<string:cityName>")
 def getCities(cityName):
@@ -245,7 +249,7 @@ def getCities(cityName):
 
 @application.route('/')
 def hello_world():
-	return register() 
+	return register()
 
 @application.route('/emailCheck/<string:email>')
 def checkEmail(email):
